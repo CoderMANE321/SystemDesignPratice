@@ -1,0 +1,114 @@
+Create an sample rate limiting application that has one api
+This api must accept multiple requests in a efficient way
+
+The system is one API behind a gateway, a client or multiple clients make request to the gateway
+, the gateway then serves the appropriate request and denies the others.
+
+Walkthrough:
+Good request:
+1. Request
+2. Token algo
+3. Add client
+3. Request
+4. Response
+5. Respond to client 200
+Bad request:
+1. Request
+2. Token algo
+3. Response to client 429
+
+Parts:
+
+
+token bucket algorithm -> creates a bucket of tokens where if there are no tokens left
+the gateway returns 429
+
+API
+    holds REST function
+        will return and accept a response triggered by request
+Gateway
+    holds middleware
+        will return and accept a request and response also checks which clients gets service
+Clients
+    starts request
+
+ Classes client, gate, api
+
+ client():
+    this.client
+
+    send request(request):
+        send request
+
+    receive request(request):
+        receive response
+
+ gate(request, response)
+
+builder design to customize 200 versus 429 request
+
+
+// Api class with Builder
+public class Api {
+    this.api
+
+
+    // Static Builder class
+    public static class Builder {
+
+        public Builder(String name) {
+            this.name = name;
+        }
+
+        // Method to set the optional camera
+        public Builder goodRequest(boolean camera) {
+            this.camera = camera;
+            return this;
+        }
+
+        // Method to set the optional role
+        public Builder badRequest(String role) {
+            this.role = role;
+            return this;
+        }
+
+        // Build method to return the final Chatter object
+        public Chatter build() {
+            return new Chatter(this);
+        }
+    }
+}
+
+
+
+ sample code:
+ const BUCKET_SIZE = 5;
+ const REFIL_RATE = 1;
+
+ class TokenBucket {
+   tokens: number;
+   capacity: number;
+
+   constructor(capacity: number, refilRate: number) {
+     this.tokens = capacity;
+     this.capacity = capacity;
+     setInterval(() => this.#add(refilRate), 1000);
+   }
+
+   #add(refilRate: number) {
+     const refilledTokensCount = this.tokens + refilRate;
+
+     this.tokens =
+       refilledTokensCount > this.capacity ? this.capacity : refilledTokensCount;
+   }
+
+   remove() {
+     if (this.tokens > 0) {
+       this.tokens--;
+
+       return 200;
+     }
+
+     return 429;
+   }
+ }
