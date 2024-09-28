@@ -9,11 +9,8 @@ public class Client {
     public void sendRequest() {
         try {
             URL url = new URL("http://localhost:8080/hello");
-            URL T_url = new URL("http://local:8080/test");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            HttpURLConnection test_connection = (HttpURLConnection) T_url.openConnection();
             connection.setRequestMethod("GET");
-            test_connection.setRequestMethod("GET");
             int responseCode = connection.getResponseCode();
             System.out.println("Response Code: " + responseCode);
 

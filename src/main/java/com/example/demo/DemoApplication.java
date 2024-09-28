@@ -10,29 +10,28 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 @RestController
 public class DemoApplication {
-
-	public static void main(String[] args) {
+	private static Gateway gateway = new Gateway();
+	public static boolean run = true;
+	public static boolean requestHandled;
+	public static void main(String[] args) throws InterruptedException {
 		SpringApplication.run(DemoApplication.class, args);
-		boolean run = true;
-		Gateway gateway = new Gateway();
 		Client client = new Client();
 		Runnable task = () -> {
+			requestHandled = gateway.handleRequest("GET");
 			client.sendRequest();
-			gateway.handleRequest("GET");
 		};
-		while (run){
+		while (run) {
 			new Thread(task).start();
+			Thread.sleep(100);
 		}
 	}
 
-
 	@GetMapping("/hello")
 	public String hello() {
-		return "Hello, Spring Boot!";
-	}
-
-	@GetMapping("/test")
-	public String test() {
-		return "interface up";
+		if (requestHandled) {
+			return "Hello, Spring Boot!";
+		} else {
+			return "Sorry, wait a second...";
+		}
 	}
 }
