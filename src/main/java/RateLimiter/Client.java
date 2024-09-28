@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-//creates a request
+//creates a request for API
 public class Client {
     public void sendRequest() {
         try {
